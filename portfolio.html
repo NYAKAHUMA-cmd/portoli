@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CYRUS PETER | CS ENGINEER</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Syne:wght@400;600;700;800&family=Fraunces:ital,wght@0,300;1,300;1,500&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f4f6f9;
+      --bg2:      #edf0f5;
+      --bg3:      #e4e9f0;
+      --surface:  #ffffff;
+      --border:   #d0d8e4;
+      --border2:  #b8c4d4;
+      --green:    #0a7c4e;
+      --green-dim:#0e9960;
+      --green-glow: rgba(10,124,78,0.10);
+      --green-glow2: rgba(10,124,78,0.05);
+      --cyan:     #0070a8;
+      --amber:    #b06000;
+      --red:      #c0392b;
+      --white:    #1a2233;
+      --gray1:    #3d4f66;
+      --gray2:    #7a8fa8;
+      --gray3:    #b0bfcf;
+      --mono:     'JetBrains Mono', monospace;
+      --display:  'Syne', sans-serif;
+      --serif:    'Fraunces', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s ease;
+      box-shadow: 0 0 10px var(--green-glow);
+      transform: translate(-50%, -50%);
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 32px; height: 32px;
+      border: 1px solid rgba(10,124,78,0.35);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+    }
+    body:has(a:hover) #cursor-ring,
+    body:has(button:hover) #cursor-ring {
+      width: 48px; height: 48px;
+      border-color: var(--green);
+    }
+
+    /* ── SUBTLE GRID BACKGROUND ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(10,124,78,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(10,124,78,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(244,246,249,0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .nav-logo .bracket { color: var(--gray2); }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s ease-in-out infinite;
+      box-shadow: 0 0 6px var(--green-glow);
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .nav-links { display: flex; gap: 0; list-style: none; }
+    .nav-links a {
+      font-size: 0.7rem;
+      color: var(--gray2);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 1rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::before { content: attr(data-index); color: var(--green); margin-right: 0.3rem; font-size: 0.6rem; }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-time { font-size: 0.7rem; color: var(--gray2); letter-spacing: 0.05em; }
+    .nav-time span { color: var(--green); }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      padding: 7rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-child { border-bottom: none; }
+
+    /* ── HERO ── */
+    #hero {
+      padding-top: 14rem;
+      padding-bottom: 8rem;
+      position: relative;
+    }
+
+    .hero-prefix {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .hero-prefix .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--green);
+      background: var(--green-glow2);
+      border: 1px solid rgba(10,124,78,0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+    }
+    .hero-prefix .line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border2), transparent); }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    h1 .accent { color: var(--green); position: relative; }
+
+    .hero-sub-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--gray1);
+      font-weight: 300;
+      margin-bottom: 2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-desc {
+      font-size: 0.88rem;
+      color: var(--gray1);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .typewriter-wrap {
+      font-size: 0.75rem;
+      color: var(--gray2);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .typewriter-wrap .prompt { color: var(--green); }
+    #typewriter { color: var(--cyan); }
+    .caret {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      animation: blink 0.9s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      padding: 0.8rem 1.6rem;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: none;
+      font-weight: 500;
+      border: none;
+    }
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-green:hover {
+      background: var(--green-dim);
+      box-shadow: 0 4px 16px rgba(10,124,78,0.2);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--green);
+      border: 1px solid rgba(10,124,78,0.3);
+    }
+    .btn-ghost:hover {
+      background: var(--green-glow2);
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      position: absolute;
+      right: 0; top: 14rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .stat-item { text-align: right; }
+    .stat-num {
+      font-family: var(--display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-num span { color: var(--green); }
+    .stat-label { font-size: 0.65rem; color: var(--gray2); letter-spacing: 0.1em; margin-top: 0.2rem; }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+    .sec-label .sl-num { font-size: 0.65rem; color: var(--green); }
+    .sec-label .sl-text {
+      font-family: var(--display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--gray2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-text p {
+      font-size: 0.88rem;
+      color: var(--gray1);
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(10,60,120,0.06);
+    }
+    .card-header {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .card-header .file-name { font-size: 0.65rem; color: var(--gray2); margin-left: 0.5rem; }
+    .card-body { padding: 1.25rem 1rem; }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+    }
+    .meta-row:last-child { border-bottom: none; }
+    .meta-key-2 { color: var(--gray2); }
+    .meta-val-2 { color: var(--green); font-weight: 500; }
+    .availability-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(10,124,78,0.08);
+      border: 1px solid rgba(10,124,78,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .skill-block {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background 0.2s;
+    }
+    .skill-block:hover { background: var(--bg2); }
+    .skill-block-title {
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .skill-block-title::before { content: ''; display: inline-block; width: 4px; height: 4px; background: var(--green); border-radius: 50%; }
+    .chip-set { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      font-size: 0.68rem;
+      color: var(--gray1);
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .chip:hover {
+      color: var(--green);
+      border-color: rgba(10,124,78,0.4);
+      background: var(--green-glow2);
+    }
+
+    /* ── TERMINAL BLOCK ── */
+    .terminal {
+      background: #1a2233;
+      border: 1px solid #2d3d52;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 3rem;
+      box-shadow: 0 4px 20px rgba(10,60,120,0.1);
+    }
+    .terminal-bar {
+      background: #111826;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #2d3d52;
+    }
+    .terminal-bar span { font-size: 0.65rem; color: #5a6a7e; margin-left: auto; }
+    .terminal-body {
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      line-height: 2;
+    }
+    .t-line { display: flex; gap: 0.8rem; }
+    .t-prompt { color: #00cc6a; flex-shrink: 0; }
+    .t-cmd { color: #00d4ff; }
+    .t-out { color: #a8b4c4; margin-left: 2.3rem; font-size: 0.72rem; }
+    .t-comment { color: #2d3d52; font-style: italic; }
+    .t-string { color: #ffb800; }
+    .t-num { color: #00d4ff; }
+
+    /* ── PROJECTS ── */
+    .project-grid { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .project-item {
+      background: var(--surface);
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .project-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--green);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .project-item:hover { background: var(--bg2); }
+    .project-item:hover::before { opacity: 1; }
+    .proj-index { font-size: 0.65rem; color: var(--gray3); letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+    .project-name {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--gray1);
+      line-height: 1.75;
+      margin-bottom: 1.2rem;
+      font-weight: 300;
+      max-width: 540px;
+    }
+    .project-stack { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .stack-tag {
+      font-size: 0.65rem;
+      color: var(--cyan);
+      background: rgba(0,112,168,0.07);
+      border: 1px solid rgba(0,112,168,0.2);
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+    .project-links { display: flex; flex-direction: column; gap: 0.6rem; flex-shrink: 0; }
+    .proj-link {
+      font-size: 0.68rem;
+      color: var(--gray2);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 2px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      letter-spacing: 0.05em;
+      background: var(--surface);
+    }
+    .proj-link:hover { color: var(--green); border-color: rgba(10,124,78,0.4); background: var(--green-glow2); }
+    .proj-link svg { width: 10px; height: 10px; }
+
+    /* ── GALLERY ── */
+    #gallery { position: relative; }
+
+    .gallery-intro {
+      font-size: 0.85rem;
+      color: var(--gray1);
+      line-height: 1.9;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      max-width: 580px;
+    }
+
+
+    .gallery-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--gray2);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .filter-btn.active,
+    .filter-btn:hover {
+      color: var(--green);
+      border-color: rgba(10,124,78,0.4);
+      background: var(--green-glow2);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      aspect-ratio: 4/3;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      group: true;
+    }
+    .gallery-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(10,60,120,0.12);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,30,60,0.7) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: flex-end;
+      padding: 0.8rem;
+    }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+
+    .gallery-item-caption {
+      font-size: 0.68rem;
+      color: #fff;
+      letter-spacing: 0.04em;
+      font-weight: 400;
+    }
+
+    .gallery-item-tag {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.58rem;
+      color: var(--green);
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(10,124,78,0.3);
+      padding: 0.15rem 0.4rem;
+      border-radius: 2px;
+      letter-spacing: 0.06em;
+    }
+
+    .gallery-item-delete {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      width: 22px; height: 22px;
+      background: rgba(192,57,43,0.9);
+      border: none;
+      border-radius: 2px;
+      color: #fff;
+      font-size: 0.65rem;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .gallery-item:hover .gallery-item-delete { display: flex; }
+    .gallery-item-delete:hover { background: #c0392b; transform: scale(1.05); }
+
+    .gallery-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--gray2);
+      font-size: 0.8rem;
+    }
+    .gallery-empty .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; opacity: 0.4; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,20,40,0.92);
+      z-index: 8000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 1.2rem;
+      width: 36px; height: 36px;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-caption {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em;
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 40px; height: 40px;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .contact-links { display: flex; flex-direction: column; gap: 0; }
+    .c-link {
+      display: grid;
+      grid-template-columns: 90px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .c-link:first-child { border-top: 1px solid var(--border); }
+    .c-link:hover { padding-left: 0.5rem; }
+    .c-link .c-key { font-size: 0.62rem; color: var(--gray3); letter-spacing: 0.1em; }
+    .c-link .c-val { font-size: 0.8rem; color: var(--gray1); transition: color 0.15s; }
+    .c-link:hover .c-val { color: var(--green); }
+    .c-link .c-arrow { color: var(--gray3); font-size: 0.75rem; transition: all 0.15s; }
+    .c-link:hover .c-arrow { color: var(--green); transform: translate(2px, -2px); }
+
+    .contact-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(10,60,120,0.06);
+    }
+    .form-header {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      color: var(--gray2);
+    }
+    .form-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .field label { font-size: 0.62rem; color: var(--gray2); letter-spacing: 0.1em; }
+    .field label .lbl-comment { color: var(--gray3); }
+    .field input,
+    .field textarea {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 300;
+      padding: 0.65rem 0.8rem;
+      outline: none;
+      transition: all 0.2s;
+      border-radius: 2px;
+      resize: none;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(10,124,78,0.4);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(10,124,78,0.07);
+    }
+    .field textarea { min-height: 100px; }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+    .footer-left { display: flex; flex-direction: column; gap: 0.4rem; }
+    .footer-name { font-family: var(--display); font-size: 0.85rem; color: var(--white); font-weight: 700; letter-spacing: -0.01em; }
+    .footer-sub { font-size: 0.65rem; color: var(--gray2); letter-spacing: 0.05em; }
+    .footer-right { font-size: 0.65rem; color: var(--gray3); text-align: right; line-height: 1.8; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-prog {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: var(--green);
+      z-index: 999;
+      box-shadow: 0 0 8px var(--green-glow);
+      transition: width 0.1s;
+    }
+
+    /* ── GLITCH ── */
+    .glitch { position: relative; }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+    .glitch:hover::before {
+      color: var(--cyan);
+      clip-path: polygon(0 30%, 100% 30%, 100% 45%, 0 45%);
+      transform: translateX(-2px);
+      opacity: 0.5;
+      animation: glitch-anim 0.15s steps(1) infinite;
+    }
+    .glitch:hover::after {
+      color: var(--red);
+      clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+      transform: translateX(2px);
+      opacity: 0.5;
+      animation: glitch-anim 0.2s steps(1) infinite reverse;
+    }
+    @keyframes glitch-anim { 0% { opacity: 0.5; } 50% { opacity: 0; } 100% { opacity: 0.5; } }
+
+    /* ── APPEAR ── */
+    .appear { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .appear.in { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links, .hero-stats, .nav-time { display: none; }
+      main { padding: 0 1.5rem; }
+      #hero { padding-top: 10rem; }
+      h1 { font-size: 2.8rem; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .project-item { grid-template-columns: 1fr; }
+      .project-links { flex-direction: row; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .footer-right { text-align: center; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+    /* ── CERTIFICATES ── */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .cert-card:hover {
+      border-color: rgba(10,124,78,0.4);
+      box-shadow: 0 4px 20px rgba(10,124,78,0.08);
+      transform: translateY(-2px);
+    }
+    .cert-card:hover::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--green);
+    }
+    .cert-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cert-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .cert-card:hover .cert-thumb img { transform: scale(1.04); }
+    .cert-thumb-fallback {
+      font-size: 2.5rem;
+      opacity: 0.4;
+      align-items: center;
+      justify-content: center;
+    }
+    .cert-info {
+      padding: 1rem 1.2rem 0.5rem;
+      flex: 1;
+    }
+    .cert-title {
+      font-family: var(--display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
+    }
+    .cert-issuer {
+      font-size: 0.68rem;
+      color: var(--gray1);
+      line-height: 1.5;
+      font-weight: 300;
+    }
+    .cert-date {
+      font-size: 0.62rem;
+      color: var(--green);
+      margin-top: 0.4rem;
+      letter-spacing: 0.08em;
+    }
+    .cert-view-btn {
+      display: block;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.65rem;
+      color: var(--gray2);
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .cert-card:hover .cert-view-btn { color: var(--green); }
+
+    /* ── CERT LIGHTBOX ── */
+    .cert-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,20,40,0.95);
+      z-index: 8100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .cert-lightbox.open { display: flex; }
+
+    @media (max-width: 768px) {
+      .cert-grid { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div class="scroll-prog" id="scrollProg"></div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lbClose">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lbPrev">‹</button>
+    <img class="lightbox-img" id="lbImg" src="" alt="" />
+    <button class="lightbox-nav lightbox-next" id="lbNext">›</button>
+    <div class="lightbox-caption" id="lbCaption"></div>
+  </div>
+
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="status-dot"></div>
+      <span class="bracket">[</span>NCP<span class="bracket">]</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about" data-index="01">about</a></li>
+      <li><a href="#skills" data-index="02">skills</a></li>
+      <li><a href="#projects" data-index="03">projects</a></li>
+      <li><a href="#gallery" data-index="04">gallery</a></li>
+      <li><a href="#certificates" data-index="05">certificates</a></li>
+      <li><a href="#contact" data-index="06">contact</a></li>
+    </ul>
+    <div class="nav-time">sys: <span id="clock">--:--:--</span></div>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-prefix">
+        <span class="tag">AVAILABLE FOR INTERNSHIP</span>
+        <div class="line"></div>
+      </div>
+
+      <h1 class="glitch" data-text="NYAKAHUMA">NYAKAHUMA</h1>
+      <h1 class="glitch" data-text="CYRUS_"><span class="accent">CYRUS</span><span style="color:var(--green)">_</span></h1>
+      <div class="hero-sub-name">Nyakahuma Cyrus Peter</div>
+
+      <p class="hero-desc">
+        I'm a Computer Science student with a hands-on approach to learning. I don't just study concepts — I build things with them. From command-line tools to web interfaces, I find satisfaction in seeing ideas become working software.
+      </p>
+
+      <div class="typewriter-wrap">
+        <span class="prompt">~/cyrus $</span>
+        <span id="typewriter"></span>
+        <span class="caret"></span>
+      </div>
+
+      <div class="hero-ctas">
+        <a href="#projects" class="btn btn-green">// view projects</a>
+        <a href="#contact" class="btn btn-ghost">// get in touch</a>
+        <button onclick="generateCV()" class="btn btn-ghost">// download cv</button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item appear">
+          <div class="stat-num">4<span>+</span></div>
+          <div class="stat-label">PROJECTS SHIPPED</div>
+        </div>
+        <div class="stat-item appear">
+          <div class="stat-num">5<span>+</span></div>
+          <div class="stat-label">LANGUAGES</div>
+        </div>
+        <div class="stat-item appear">
+          <div class="stat-num">1<span>x</span></div>
+          <div class="stat-label">UGANDAN BUILDER</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="sec-label">
+        <span class="sl-num">01</span>
+        <span class="sl-text">About</span>
+      </div>
+      <div class="about-grid appear">
+        <div class="about-text">
+          <p>I'm Nyakahuma Cyrus Peter — a Computer Science student who treats learning as a manufacturing process. Concepts enter, working software exits. I don't accumulate theory for its own sake; I extract what's useful and build with it.</p>
+          <p>My focus areas span software development, algorithms, data structures, networking and web technologies. I'm comfortable across the stack and enjoy picking up new tools when the problem demands it.</p>
+          <p>Currently at Uganda Christian University, building alongside a small team at Daguha Technologies, and actively looking for internships and collaborations with people who care deeply about craft.</p>
+        </div>
+        <div class="about-card">
+          <div class="card-header">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span class="file-name">profile.json</span>
+          </div>
+          <div class="card-body">
+            <div class="meta-row"><span class="meta-key-2">status</span><span class="availability-badge"><span class="status-dot"></span>open</span></div>
+            <div class="meta-row"><span class="meta-key-2">degree</span><span class="meta-val-2">B.Sc CS</span></div>
+            <div class="meta-row"><span class="meta-key-2">uni</span><span class="meta-val-2">UCU</span></div>
+            <div class="meta-row"><span class="meta-key-2">location</span><span class="meta-val-2">Uganda 🇺🇬</span></div>
+            <div class="meta-row"><span class="meta-key-2">company</span><span class="meta-val-2">Daguha Tech</span></div>
+            <div class="meta-row"><span class="meta-key-2">response</span><span class="meta-val-2">&lt; 24h</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="sec-label">
+        <span class="sl-num">02</span>
+        <span class="sl-text">Skills & Stack</span>
+      </div>
+      <div class="skills-grid appear">
+        <div class="skill-block">
+          <div class="skill-block-title">LANGUAGES</div>
+          <div class="chip-set">
+            <span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">Java</span><span class="chip">C</span><span class="chip">SQL</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <div class="skill-block-title">WEB</div>
+          <div class="chip-set">
+            <span class="chip">HTML5</span><span class="chip">CSS3</span><span class="chip">ES6+</span><span class="chip">REST APIs</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <div class="skill-block-title">CS CORE</div>
+          <div class="chip-set">
+            <span class="chip">Data Structures</span><span class="chip">Algorithms</span><span class="chip">OOP</span><span class="chip">Networking</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <div class="skill-block-title">TOOLS</div>
+          <div class="chip-set">
+            <span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">Linux</span><span class="chip">Django</span><span class="chip">Firebase</span><span class="chip">Netlify</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+          <span>skills.py</span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">~/cyrus $</span><span class="t-cmd">cat skills.py</span></div>
+          <div class="t-out t-comment"># Skills manifest — Nyakahuma Cyrus Peter</div>
+          <div class="t-out"><span style="color:#00cc6a">class</span> <span style="color:#00d4ff">Engineer</span>:</div>
+          <div class="t-out">&nbsp;&nbsp;languages = [<span class="t-string">"Python"</span>, <span class="t-string">"JavaScript"</span>, <span class="t-string">"Java"</span>, <span class="t-string">"C"</span>, <span class="t-string">"SQL"</span>]</div>
+          <div class="t-out">&nbsp;&nbsp;frameworks = [<span class="t-string">"Django"</span>, <span class="t-string">"Chart.js"</span>]</div>
+          <div class="t-out">&nbsp;&nbsp;tools = [<span class="t-string">"Git"</span>, <span class="t-string">"Linux"</span>, <span class="t-string">"Firebase"</span>, <span class="t-string">"Netlify"</span>]</div>
+          <div class="t-out">&nbsp;&nbsp;experience = <span class="t-num">{ "years": "2+", "projects": 4 }</span></div>
+          <div class="t-out">&nbsp;&nbsp;seeking = <span class="t-string">"internship / collaboration"</span></div>
+          <br/>
+          <div class="t-line"><span class="t-prompt">~/cyrus $</span><span class="t-cmd">python3 skills.py</span></div>
+          <div class="t-out" style="color:#00cc6a">✓ Engineer initialised. Ready to ship.</div>
+          <div class="t-line"><span class="t-prompt">~/cyrus $</span><span class="caret"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="sec-label">
+        <span class="sl-num">03</span>
+        <span class="sl-text">Selected Projects</span>
+      </div>
+      <div class="project-grid appear">
+        <div class="project-item">
+          <div>
+            <div class="proj-index">PROJECT / 001</div>
+            <div class="project-name">Student Management System</div>
+            <p class="project-desc">Full-stack web app for managing academic records, course enrollment, and student transcripts. Clean admin dashboard backed by a relational SQLite database with Django ORM.</p>
+            <div class="project-stack">
+              <span class="stack-tag">Python</span><span class="stack-tag">Django</span><span class="stack-tag">SQLite</span><span class="stack-tag">HTML/CSS</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/NYAKAHUMA-cmd/STUDENT_MANAGEMENT/blob/main/student_management.zip" target="_blank" class="proj-link">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+            <a href="#" class="proj-link">↗ Live</a>
+          </div>
+        </div>
+
+        <div class="project-item">
+          <div>
+            <div class="proj-index">PROJECT / 002</div>
+            <div class="project-name">Password Manager CLI</div>
+            <p class="project-desc">Terminal tool for securely storing and retrieving credentials. Implements AES-256 encryption with salt-based master password hashing. Zero cloud dependency — everything stays local.</p>
+            <div class="project-stack">
+              <span class="stack-tag">Python</span><span class="stack-tag">AES-256</span><span class="stack-tag">CLI</span><span class="stack-tag">Cryptography</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/NYAKAHUMA-cmd/PASSWORD_MANAGER/blob/main/password_manager.zip" target="_blank" class="proj-link">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+
+        <div class="project-item">
+          <div>
+            <div class="proj-index">PROJECT / 003</div>
+            <div class="project-name">Data Visualization Dashboard</div>
+            <p class="project-desc">Client-side dashboard that parses multi-format CSV files directly in-browser and renders interactive performance metric charts. No server, no backend — pure JS processing.</p>
+            <div class="project-stack">
+              <span class="stack-tag">JavaScript</span><span class="stack-tag">Chart.js</span><span class="stack-tag">HTML5/CSS3</span><span class="stack-tag">CSV Parsing</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/NYAKAHUMA-cmd/DATA_VISUALIZATION-DASHBOARD/blob/main/data_dashboard.zip" target="_blank" class="proj-link">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+            <a href="#" class="proj-link">↗ Live</a>
+          </div>
+        </div>
+
+        <div class="project-item">
+          <div>
+            <div class="proj-index">PROJECT / 004</div>
+            <div class="project-name">Personal Portfolio Canvas</div>
+            <p class="project-desc">This portfolio — coded from scratch, no frameworks. Custom cursor, terminal aesthetic, animated reveals, and a jsPDF-powered CV generator. Deployed via Netlify + GitHub CI.</p>
+            <div class="project-stack">
+              <span class="stack-tag">HTML5</span><span class="stack-tag">CSS Grid</span><span class="stack-tag">Vanilla JS</span><span class="stack-tag">jsPDF</span><span class="stack-tag">Netlify</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="#" class="proj-link">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery">
+      <div class="sec-label">
+        <span class="sl-num">04</span>
+        <span class="sl-text">Gallery</span>
+      </div>
+
+      <p class="gallery-intro appear">
+        A visual record of the journey — lab sessions, builds, campus moments, and team highlights.
+      </p>
+
+      <div class="gallery-filters appear" id="filterBar">
+        <button class="filter-btn active" data-tag="all">// all</button>
+        <button class="filter-btn" data-tag="events">// events</button>
+        <button class="filter-btn" data-tag="builds">// builds</button>
+        <button class="filter-btn" data-tag="campus">// campus</button>
+        <button class="filter-btn" data-tag="team">// team</button>
+      </div>
+
+      <div class="gallery-grid appear" id="galleryGrid">
+        <!-- ─────────────────────────────────────────────────────────────
+             ADD YOUR PHOTOS:
+             1. Create an  images/  folder in your GitHub repo root
+             2. Upload your .jpg/.png/.webp files there
+             3. Copy a block below for each photo, filling in:
+                src      →  images/your-filename.jpg
+                caption  →  short description
+                data-tag →  events | builds | campus | team
+        ──────────────────────────────────────────────────────────────── -->
+
+        <div class="gallery-item" data-tag="builds" onclick="openLightbox(0)">
+          <img src="images/photo1.jpg" alt="Network Lab Setup" loading="lazy" />
+          <div class="gallery-item-overlay">
+            <span class="gallery-item-caption">Network Lab Setup</span>
+          </div>
+          <span class="gallery-item-tag">builds</span>
+        </div>
+
+        <div class="gallery-item" data-tag="campus" onclick="openLightbox(1)">
+          <img src="images/photo2.jpg" alt="UCU Campus" loading="lazy" />
+          <div class="gallery-item-overlay">
+            <span class="gallery-item-caption">UCU Campus</span>
+          </div>
+          <span class="gallery-item-tag">campus</span>
+        </div>
+
+        <div class="gallery-item" data-tag="events" onclick="openLightbox(2)">
+          <img src="images/photo3.jpg" alt="SkillBridge Pitch" loading="lazy" />
+          <div class="gallery-item-overlay">
+            <span class="gallery-item-caption">SkillBridge Pitch</span>
+          </div>
+          <span class="gallery-item-tag">events</span>
+        </div>
+
+        <div class="gallery-item" data-tag="team" onclick="openLightbox(3)">
+          <img src="images/photo4.jpg" alt="Team Session" loading="lazy" />
+          <div class="gallery-item-overlay">
+            <span class="gallery-item-caption">Team Session</span>
+          </div>
+          <span class="gallery-item-tag">team</span>
+        </div>
+
+        <!-- Add more blocks here following the same pattern -->
+      </div>
+    </section>
+
+    <!-- CERTIFICATES -->
+    <section id="certificates">
+      <div class="sec-label">
+        <span class="sl-num">05</span>
+        <span class="sl-text">Certificates & Credentials</span>
+      </div>
+
+      <p class="gallery-intro appear" style="margin-bottom:2.5rem;">
+        Verified credentials from workshops, courses, and professional programmes.
+      </p>
+
+      <div class="cert-grid appear" id="certGrid">
+        <!-- ─────────────────────────────────────────────────────────────
+             ADD YOUR CERTIFICATES:
+             1. Create a  certificates/  folder in your GitHub repo root
+             2. Upload .PNG/.png scans OR .pdf files there
+             3. Copy a block below for each certificate, filling in:
+                data-src   →  certificates/your-cert.PNG  (or .pdf)
+                data-type  →  image  OR  pdf
+                title text →  name shown on the card
+                issuer     →  who issued it
+                date       →  when you got it
+        ──────────────────────────────────────────────────────────────── -->
+
+        <div class="cert-card" onclick="openCert('certificates/cert1.PNG','image')">
+          <div class="cert-thumb">
+            <img src="certificates/cert1.PNG" alt="Networking Workshop Certificate" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+            <div class="cert-thumb-fallback" style="display:none">📜</div>
+          </div>
+          <div class="cert-info">
+            <div class="cert-title">International Certificate for Digital Literacy</div>
+            <div class="cert-issuer">MTN UGANDA </div>
+            <div class="cert-date">Patnership with Ministry of ICT and UCC</div>
+          </div>
+          <span class="cert-view-btn">// view ↗</span>
+        </div>
+
+        <div class="cert-card" onclick="openCert('certificates/cert2.PNG','image')">
+          <div class="cert-thumb">
+            <img src="certificates/cert2.PNG" alt="Cybersecurity Certificate" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+            <div class="cert-thumb-fallback" style="display:none">📜</div>
+          </div>
+          <div class="cert-info">
+            <div class="cert-title">Tech Leadership &amp; Mentorship Workshop</div>
+            <div class="cert-issuer">Uganda Christian University — Trinity Recess 2026</div>
+            <div class="cert-date">May 2026</div>
+          </div>
+          <span class="cert-view-btn">// view ↗</span>
+        </div>
+        <div class="cert-card" onclick="openCert('certificates/cert2.PNG','image')">
+          <div class="cert-thumb">
+            <img src="certificates/cert4.PNG" alt="Cybersecurity Certificate" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+            <div class="cert-thumb-fallback" style="display:none">📜</div>
+          </div>
+          <div class="cert-info">
+            <div class="cert-title">Introduction to Networks</div>
+            <div class="cert-issuer">CISCO</div>
+            <div class="cert-date">May 2026</div>
+          </div>
+          <span class="cert-view-btn">// view ↗</span>
+        </div>
+
+        <div class="cert-card" onclick="openCert('certificates/cert3.PNG','image')">
+          <div class="cert-thumb">
+            <img src="certificates/cert3.PNG" alt="SolidWorks Certificate" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+            <div class="cert-thumb-fallback" style="display:none">📜</div>
+          </div>
+          <div class="cert-info">
+            <div class="cert-title">Getting Started with Cisco Packet Tracer(CISCO)</div>
+            <div class="cert-issuer">CISCO</div>
+            <div class="cert-date">May 2026</div>
+          </div>
+          <span class="cert-view-btn">// view ↗</span>
+        </div>
+        
+        <!-- Add more cert-card blocks here -->
+      </div>
+
+    </section>
+
+    <!-- CERT LIGHTBOX -->
+    <div class="cert-lightbox" id="certLightbox" onclick="if(event.target===this)closeCert()">
+      <button class="lightbox-close" onclick="closeCert()">✕</button>
+      <img class="lightbox-img" id="certLbImg" src="" alt="" style="display:none" />
+      <iframe id="certLbPdf" src="" style="display:none;width:90vw;height:85vh;border:none;border-radius:4px;"></iframe>
+    </div>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="sec-label">
+        <span class="sl-num">06</span>
+        <span class="sl-text">Contact &amp; Connect</span>
+      </div>
+      <div class="contact-grid appear">
+        <div>
+          <p style="font-size:0.85rem;color:var(--gray1);line-height:1.9;margin-bottom:2.5rem;font-weight:300;">
+            Looking for internship tracks, project collaborations, or just want to talk code? Open pipelines below. Response time: &lt;24h.
+          </p>
+          <div class="contact-links">
+            <a href="mailto:nyakahumacyrusp@email.com" class="c-link">
+              <span class="c-key">EMAIL</span>
+              <span class="c-val">nyakahumacyrusp@email.com</span>
+              <span class="c-arrow">↗</span>
+            </a>
+            <a href="https://github.com/NYAKAHUMA-cmd" target="_blank" class="c-link">
+              <span class="c-key">GITHUB</span>
+              <span class="c-val">github.com/NYAKAHUMA-cmd</span>
+              <span class="c-arrow">↗</span>
+            </a>
+            <a href="tel:+256706195154" class="c-link">
+              <span class="c-key">PHONE</span>
+              <span class="c-val">+256 706 195 154</span>
+              <span class="c-arrow">↗</span>
+            </a>
+            <a href="https://medium.com/@nyakahumacyrusp" target="_blank" class="c-link">
+              <span class="c-key">MEDIUM</span>
+              <span class="c-val">medium.com/@nyakahumacyrusp</span>
+              <span class="c-arrow">↗</span>
+            </a>
+            <a href="https://linkedin.com/in/nyakahuma-cyrus-peter-a437682a7" target="_blank" class="c-link">
+              <span class="c-key">LINKEDIN</span>
+              <span class="c-val">linkedin.com/in/nyakahuma...</span>
+              <span class="c-arrow">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-form">
+          <div class="form-header">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span style="margin-left:0.5rem;">send_message.sh</span>
+          </div>
+          <form class="form-body" onsubmit="handleSubmit(event)">
+            <div class="field">
+              <label>NAME <span class="lbl-comment">// string</span></label>
+              <input type="text" name="name" required autocomplete="off" placeholder="your_name" />
+            </div>
+            <div class="field">
+              <label>EMAIL <span class="lbl-comment">// string</span></label>
+              <input type="email" name="email" required autocomplete="off" placeholder="you@example.com" />
+            </div>
+            <div class="field">
+              <label>MESSAGE <span class="lbl-comment">// string</span></label>
+              <textarea name="message" required placeholder="// write your message here..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-green" id="submit-btn" style="width:100%;justify-content:center;">// send message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <div class="footer-name">NYAKAHUMA CYRUS PETER</div>
+      <div class="footer-sub">COMPUTER SCIENCE · UCU · DAGUHA TECHNOLOGIES</div>
+    </div>
+    <div class="footer-right">
+      <div style="color:var(--green);">STATUS: ONLINE</div>
+      <div>BUILD: 2025.05</div>
+      <div>LOCATION: UGANDA</div>
+    </div>
+  </footer>
+
+  <script>
+    // ── CURSOR ──
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', e => {
+      cur.style.left = e.clientX + 'px';
+      cur.style.top = e.clientY + 'px';
+      setTimeout(() => {
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+      }, 60);
+    });
+
+    // ── SCROLL PROGRESS ──
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - innerHeight) * 100;
+      document.getElementById('scrollProg').style.width = pct + '%';
+    });
+
+    // ── CLOCK ──
+    function tick() {
+      document.getElementById('clock').textContent = new Date().toTimeString().slice(0,8);
+    }
+    tick(); setInterval(tick, 1000);
+
+    // ── TYPEWRITER ──
+    const phrases = [
+      'building full-stack apps...',
+      'writing clean algorithms...',
+      'encrypting credentials...',
+      'parsing CSV datasets...',
+      'pushing to github...',
+      'open to internships :)',
+    ];
+    let pi = 0, ci = 0, deleting = false;
+    const tw = document.getElementById('typewriter');
+    function type() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        tw.textContent = phrase.slice(0, ++ci);
+        if (ci === phrase.length) { deleting = true; setTimeout(type, 1800); return; }
+      } else {
+        tw.textContent = phrase.slice(0, --ci);
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      }
+      setTimeout(type, deleting ? 40 : 70);
+    }
+    setTimeout(type, 800);
+
+    // ── INTERSECT REVEAL ──
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) setTimeout(() => e.target.classList.add('in'), i * 80);
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.appear').forEach(el => obs.observe(el));
+
+    // ── FORM ──
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = '// message sent ✓';
+      btn.style.background = '#0a7c4e';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = '// send message';
+        btn.style.background = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    }
+
+    // ── GALLERY (static — images served from images/ folder) ──
+    // To add more photos: duplicate an item in the galleryItems array below
+    const galleryItems = [
+      { src: "images/photo1.jpg", caption: "",   tag: "",  date: "Jun 2026" },
+      { src: "images/photo2.jpg", caption: "",          tag: "campus",  date: "Jun 2026" },
+      { src: "images/photo3.jpg", caption: "",   tag: "",  date: "Jun 2026" },
+      { src: "images/photo4.jpg", caption: "",        tag: "team",    date: "Jun 2026" },
+      // { src: "images/photo5.jpg", caption: "Your Caption", tag: "builds", date: "Jun 2026" },
+    ];
+
+    let currentFilter = 'all';
+    let lightboxIndex = 0;
+
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      const filtered = currentFilter === 'all'
+        ? galleryItems
+        : galleryItems.filter(i => i.tag === currentFilter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="gallery-empty"><span class="empty-icon">🖼</span><span>No photos in this category</span></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((item) => {
+        const idx = galleryItems.indexOf(item);
+        return `
+          <div class="gallery-item" data-tag="${item.tag}" onclick="openLightbox(${idx})">
+            <img src="${item.src}" alt="${item.caption}" loading="lazy" />
+            <div class="gallery-item-overlay">
+              <span class="gallery-item-caption">${item.caption}</span>
+            </div>
+            <span class="gallery-item-tag">${item.tag}</span>
+          </div>`;
+      }).join('');
+    }
+
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.tag;
+        renderGallery();
+      });
+    });
+
+    // Photo Lightbox
+    function openLightbox(idx) {
+      lightboxIndex = idx;
+      updateLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function updateLightbox() {
+      const item = galleryItems[lightboxIndex];
+      document.getElementById('lbImg').src = item.src;
+      document.getElementById('lbCaption').textContent = item.caption + ' · ' + item.date;
+    }
+    document.getElementById('lbClose').onclick = closeLightbox;
+    document.getElementById('lbPrev').onclick = () => { lightboxIndex = (lightboxIndex - 1 + galleryItems.length) % galleryItems.length; updateLightbox(); };
+    document.getElementById('lbNext').onclick = () => { lightboxIndex = (lightboxIndex + 1) % galleryItems.length; updateLightbox(); };
+    document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('lightbox').classList.contains('open')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft')  { lightboxIndex = (lightboxIndex - 1 + galleryItems.length) % galleryItems.length; updateLightbox(); }
+        if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % galleryItems.length; updateLightbox(); }
+      }
+      if (document.getElementById('certLightbox').classList.contains('open')) {
+        if (e.key === 'Escape') closeCert();
+      }
+    });
+
+    renderGallery();
+
+    // ── CERTIFICATES LIGHTBOX ──
+    // type: 'image' or 'pdf'
+    function openCert(src, type) {
+      const lb   = document.getElementById('certLightbox');
+      const img  = document.getElementById('certLbImg');
+      const pdf  = document.getElementById('certLbPdf');
+      img.style.display = 'none';
+      pdf.style.display = 'none';
+      if (type === 'pdf') {
+        pdf.src = src;
+        pdf.style.display = 'block';
+      } else {
+        img.src = src;
+        img.style.display = 'block';
+      }
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCert() {
+      document.getElementById('certLightbox').classList.remove('open');
+      document.getElementById('certLbPdf').src = '';
+      document.body.style.overflow = '';
+    }
+  </script>
+
+  <script>
+  function generateCV() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const green = [10, 124, 78];
+    const gray  = [90, 106, 126];
+    const light = [50, 70, 100];
+
+    doc.setFillColor(244, 246, 249);
+    doc.rect(0, 0, 210, 297, 'F');
+    doc.setFillColor(...green);
+    doc.rect(0, 0, 4, 297, 'F');
+
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 34, 51);
+    doc.text("NYAKAHUMA CYRUS PETER", 14, 24);
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...green);
+    doc.text("// Computer Science Student · Uganda Christian University · Uganda", 14, 32);
+
+    doc.setTextColor(...gray);
+    doc.setFontSize(8);
+    doc.text("nyakahumacyrusp@email.com  |  +256 706 195 154  |  github.com/NYAKAHUMA-cmd", 14, 39);
+    doc.text("linkedin.com/in/nyakahuma-cyrus-peter-a437682a7  |  medium.com/@nyakahumacyrusp", 14, 45);
+
+    doc.setDrawColor(...green);
+    doc.setLineWidth(0.5);
+    doc.line(14, 50, 196, 50);
+
+    function section(label, y) {
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...green);
+      doc.text("// " + label, 14, y);
+      doc.setDrawColor(208, 216, 228);
+      doc.setLineWidth(0.3);
+      doc.line(14, y + 2, 196, y + 2);
+      return y + 10;
+    }
+
+    let y = section("ABOUT", 58);
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...light);
+    const about = doc.splitTextToSize("Computer Science student with a hands-on approach to learning. From command-line encrypted tools to full-stack web systems, I build purposeful software. I'm comfortable across the stack, fast at adapting to new tooling, and serious about code quality. Open to internships, open-source collaborations, and engineering teams who build things that matter.", 178);
+    doc.text(about, 14, y);
+    y += about.length * 5 + 4;
+
+    y = section("SKILLS", y);
+    const skills = [
+      ["Languages", "Python  JavaScript  Java  C  SQL"],
+      ["Web",       "HTML5  CSS3  JavaScript ES6+  REST APIs"],
+      ["CS Core",   "Data Structures  Algorithms  OOP  Relational DBs  Networking"],
+      ["Tools",     "Git  GitHub  Linux  VS Code  Netlify  Firebase  Django  SQLite"],
+    ];
+    skills.forEach(([cat, items]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...green);
+      doc.setFontSize(8);
+      doc.text(cat, 14, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...light);
+      doc.text(items, 52, y);
+      y += 7;
+    });
+    y += 3;
+
+    y = section("PROJECTS", y);
+    const projects = [
+      ["Student Management System", "Python · Django · SQLite · HTML/CSS",
+       "Full-stack web app for managing academic records, course enrollment, and grades."],
+      ["Password Manager CLI", "Python · AES-256 · Cryptography",
+       "Terminal tool for securely storing credentials. AES encryption + salt-based master password hashing."],
+      ["Data Visualization Dashboard", "JavaScript · Chart.js · HTML/CSS",
+       "Browser-based dashboard parsing CSV datasets and rendering interactive charts client-side."],
+      ["Portfolio Site", "HTML5 · CSS3 · Vanilla JS · Netlify",
+       "Coded from scratch — custom cursor, jsPDF CV generator. Deployed via GitHub + Netlify CI."],
+    ];
+    projects.forEach(([name, stack, desc]) => {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(26, 34, 51);
+      doc.text(name, 14, y);
+      doc.setFontSize(7.5);
+      doc.setFont('helvetica', 'italic');
+      doc.setTextColor(...green);
+      doc.text(stack, 14, y + 5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...light);
+      const d = doc.splitTextToSize(desc, 178);
+      doc.text(d, 14, y + 10);
+      y += 10 + d.length * 4.5 + 5;
+    });
+
+    y = section("EDUCATION", y);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 34, 51);
+    doc.text("BSc Computer Science — Uganda Christian University", 14, y);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...gray);
+    doc.text("Kampala, Uganda  |  Status: Open to Opportunities", 14, y + 6);
+
+    doc.setFontSize(7);
+    doc.setTextColor(176, 191, 207);
+    doc.text("Generated from portfolio — nyakahuma cyrus peter — " + new Date().toLocaleDateString(), 14, 289);
+
+    doc.save("NYAKAHUMA_CYRUS_PETER_CV.pdf");
+  }
+  </script>
+
+</body>
+</html>
