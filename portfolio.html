@@ -1205,15 +1205,15 @@
         <!-- ─────────────────────────────────────────────────────────────
              ADD YOUR PHOTOS:
              1. Create an  images/  folder in your GitHub repo root
-             2. Upload your .jpg/.png/.webp files there
+             2. Upload your .png/.png/.webp files there
              3. Copy a block below for each photo, filling in:
-                src      →  images/your-filename.jpg
+                src      →  images/your-filename.png
                 caption  →  short description
                 data-tag →  events | builds | campus | team
         ──────────────────────────────────────────────────────────────── -->
 
         <div class="gallery-item" data-tag="builds" onclick="openLightbox(0)">
-          <img src="images/photo1.jpg" alt="Network Lab Setup" loading="lazy" />
+          <img src="images/photo1.png" alt="Network Lab Setup" loading="lazy" />
           <div class="gallery-item-overlay">
             <span class="gallery-item-caption">Network Lab Setup</span>
           </div>
@@ -1221,7 +1221,7 @@
         </div>
 
         <div class="gallery-item" data-tag="campus" onclick="openLightbox(1)">
-          <img src="images/photo2.jpg" alt="UCU Campus" loading="lazy" />
+          <img src="images/photo2.png" alt="UCU Campus" loading="lazy" />
           <div class="gallery-item-overlay">
             <span class="gallery-item-caption">UCU Campus</span>
           </div>
@@ -1229,7 +1229,7 @@
         </div>
 
         <div class="gallery-item" data-tag="events" onclick="openLightbox(2)">
-          <img src="images/photo3.jpg" alt="SkillBridge Pitch" loading="lazy" />
+          <img src="images/photo3.png" alt="SkillBridge Pitch" loading="lazy" />
           <div class="gallery-item-overlay">
             <span class="gallery-item-caption">SkillBridge Pitch</span>
           </div>
@@ -1237,7 +1237,7 @@
         </div>
 
         <div class="gallery-item" data-tag="team" onclick="openLightbox(3)">
-          <img src="images/photo4.jpg" alt="Team Session" loading="lazy" />
+          <img src="images/photo4.png" alt="Team Session" loading="lazy" />
           <div class="gallery-item-overlay">
             <span class="gallery-item-caption">Team Session</span>
           </div>
@@ -1489,11 +1489,11 @@
     // ── GALLERY (static — images served from images/ folder) ──
     // To add more photos: duplicate an item in the galleryItems array below
     const galleryItems = [
-      { src: "images/photo1.jpg", caption: "",   tag: "",  date: "Jun 2026" },
-      { src: "images/photo2.jpg", caption: "",          tag: "campus",  date: "Jun 2026" },
-      { src: "images/photo3.jpg", caption: "",   tag: "",  date: "Jun 2026" },
-      { src: "images/photo4.jpg", caption: "",        tag: "team",    date: "Jun 2026" },
-      // { src: "images/photo5.jpg", caption: "Your Caption", tag: "builds", date: "Jun 2026" },
+      { src: "images/photo1.png", caption: "",   tag: "",  date: "Jun 2026" },
+      { src: "images/photo2.png", caption: "",          tag: "campus",  date: "Jun 2026" },
+      { src: "images/photo3.png", caption: "",   tag: "",  date: "Jun 2026" },
+      { src: "images/photo4.png", caption: "",        tag: "team",    date: "Jun 2026" },
+      // { src: "images/photo5.png", caption: "Your Caption", tag: "builds", date: "Jun 2026" },
     ];
 
     let currentFilter = 'all';
